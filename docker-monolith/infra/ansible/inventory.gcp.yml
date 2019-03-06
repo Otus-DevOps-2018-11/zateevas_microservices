@@ -1,0 +1,12 @@
+---
+plugin: gcp_compute
+filters:
+groups:
+  app: "'app' in name"
+projects:
+  - docker-233311 
+scopes:
+  - https://www.googleapis.com/auth/compute
+auth_kind: serviceaccount
+service_account_file: ~/docker-project.json
+
