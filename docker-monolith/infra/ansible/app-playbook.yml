@@ -1,0 +1,39 @@
+---
+- name: Configure Apps
+  hosts: app
+  become: yes
+  tasks:
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: dist
+    - name:    Install prerequisites
+      apt:     name={{item}} update_cache=yes
+      with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python-pip
+    - name:    Add Docker GPG key
+      apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+    - name:    Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+    - name:    Install Docker
+      apt:     name=docker-ce
+    - name: Make sure a service is running
+      systemd:
+        state: started
+        name: docker
+        enabled: yes
+    - name: install docker lib
+      pip:
+        name: docker-py
+    - name: reddit-app container
+      docker_container:
+        name: reddit-app
+        image: zateevas/otus-reddit:1.0
+        state: started
+        ports:
+        - "9292:9292"
+

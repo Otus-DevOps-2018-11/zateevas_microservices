@@ -8,5 +8,5 @@ projects:
 scopes:
   - https://www.googleapis.com/auth/compute
 auth_kind: serviceaccount
-service_account_file: ~/docker-key.json
+service_account_file: ~/docker-project.json
 
