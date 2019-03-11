@@ -1,0 +1,22 @@
+version: '3.3'
+
+services:
+  post:
+   volumes:
+     - /srv/${USERNAME}/post-py/:/app/:rw
+
+  ui: 
+    entrypoint:
+    - puma
+    - -w 2
+    - --debug
+    volumes:
+      - /srv/${USERNAME}/ui/:/app/:rw
+
+  comment:
+   entrypoint:
+     - puma
+     - -w 2
+     - --debug
+   volumes:
+     - /srv/${USERNAME}/comment/:/app/:rw
