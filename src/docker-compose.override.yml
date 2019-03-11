@@ -19,4 +19,4 @@ services:
      - -w 2
      - --debug
    volumes:
-     - /srv/reddit/comment/:/app/:rw
+     - /srv/${USERNAME}/comment/:/app/:rw
