@@ -19,7 +19,7 @@ build_job:
   script:
     - docker build -t reddit:$CI_COMMIT_SHORT_SHA .
     - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin
-    - docker push $CI_COMMIT_SHORT_SHA
+    - docker push reddit:$CI_COMMIT_SHORT_SHA
     - docker rm $CI_COMMIT_SHORT_SHA
 
 test_unit_job:
