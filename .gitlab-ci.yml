@@ -18,7 +18,7 @@ build_job:
   image: docker:stable
   script:
     - docker build -t $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA .
-    - sh -c 'echo "$REGISTRY_PASSWORD" | docker login --username "$REGISTRY_USER" --password-stdin' 
+    - bash -c 'echo "$REGISTRY_PASSWORD" | docker login --username "$REGISTRY_USER" --password-stdin' 
     - docker push $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
     - docker rm $CI_COMMIT_SHORT_SHA
 
