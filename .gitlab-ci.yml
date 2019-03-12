@@ -12,12 +12,15 @@ variables:
 
 before_script:
  - cd reddit
- - bundle install 
 
 build_job:
   stage: build
+  image: docker:stable
   script:
-    - echo 'Building'
+    - docker build -t reddit:$CI_COMMIT_SHORT_SHA .
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin
+    - docker push $CI_COMMIT_SHORT_SHA
+    - docker rm $CI_COMMIT_SHORT_SHA
 
 test_unit_job:
   stage: test
@@ -52,11 +55,12 @@ branch review:
  
 staging:
   stage: stage
+  image: docker:stable
   when: manual
   only:
     - /^\d+\.\d+\.\d+/
   script:
-    - echo 'Deploy'
+    - docker run $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA -p 80:9292
   environment:
     name: stage
     url: https://beta.example.com
