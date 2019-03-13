@@ -62,7 +62,7 @@ staging:
   only:
     - /^\d+\.\d+\.\d+/
   script:
-    - docker run $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA -p 80:9292
+          - docker run -p 80:9292 $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
   environment:
     name: stage
     url: https://beta.example.com
