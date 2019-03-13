@@ -1,0 +1,12 @@
+---
+plugin: gcp_compute
+filters:
+groups:
+  gitlab-runner: "'gitlab-runner' in name"
+projects:
+  - gitlab-234311
+scopes:
+  - https://www.googleapis.com/auth/compute
+auth_kind: serviceaccount
+service_account_file: ~/gitlab-gcp.json
+
