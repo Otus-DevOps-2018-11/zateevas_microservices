@@ -46,6 +46,7 @@ deploy_dev_job:
 
 branch review:
   stage: review
+  image: docker:stable
   script: docker run -p 80:9292 $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
   environment:
     name: branch/$CI_COMMIT_REF_NAME
