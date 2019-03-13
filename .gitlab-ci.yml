@@ -46,7 +46,7 @@ deploy_dev_job:
 
 branch review:
   stage: review
-  script: echo "Deploy to $CI_ENVIRONMENT_SLUG"
+  script: docker run -p 80:9292 $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
   environment:
     name: branch/$CI_COMMIT_REF_NAME
     url: http://$CI_ENVIRONMENT_SLUG.example.com
@@ -62,7 +62,7 @@ staging:
   only:
     - /^\d+\.\d+\.\d+/
   script:
-          - docker run -p 80:9292 $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
+    - echo 'Staging'
   environment:
     name: stage
     url: https://beta.example.com
