@@ -24,6 +24,7 @@ build_job:
 
 test_unit_job:
   stage: test
+  image: ruby:2.4.2
   services:
     - mongo:latest
   script:
