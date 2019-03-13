@@ -1,0 +1,78 @@
+image: ruby:2.4.2
+
+stages:
+  - build
+  - test
+  - review
+  - stage
+  - production
+
+variables:
+  DATABASE_URL: 'mongodb://mongo/user_posts'
+
+build_job:
+  stage: build
+  image: docker:stable
+  script:
+    - docker build -t $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA .
+    - echo $REGISTRY_PASSWORD | docker login --username $REGISTRY_USER --password-stdin 
+    - docker push $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
+    - docker rmi $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
+
+test_unit_job:
+  stage: test
+  image: ruby:2.4.2
+  services:
+    - mongo:latest
+  script:
+    - cd reddit
+    - bundle install
+    - ruby simpletest.rb
+
+test_integration_job:
+  stage: test
+  script:
+    - echo 'Testing 2'
+
+deploy_dev_job:
+  stage: review
+  script:
+    - echo 'Deploy'
+  environment:
+    name: dev
+    url: http://dev.example.com
+
+branch review:
+  stage: review
+  image: docker:stable
+  script: docker run -d -p 80:9292 $REGISTRY_USER/reddit:$CI_COMMIT_SHORT_SHA
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: http://$CI_ENVIRONMENT_SLUG.example.com
+  only:
+    - branches
+  except:
+    - master
+ 
+staging:
+  stage: stage
+  image: docker:stable
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Staging'
+  environment:
+    name: stage
+    url: https://beta.example.com
+
+production:
+ stage: production
+ when: manual
+ only:
+   - /^\d+\.\d+\.\d+/
+ script:
+   - echo 'Deploy'
+ environment:
+   name: production
+   url: https://example.com

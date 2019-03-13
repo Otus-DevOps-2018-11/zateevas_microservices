@@ -1,0 +1,45 @@
+---
+- name: Configure gitlab-runner
+  hosts: gitlab-runner
+  become: yes
+  vars_files:
+    - vars/vars.yml
+  tasks:
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: dist
+    - name:    Install prerequisites
+      apt:     name={{item}} update_cache=yes
+      with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python-pip
+    - name:    Add Docker GPG key
+      apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+    - name:    Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+    - name:    Install Docker
+      apt:     name=docker-ce
+    - name: Make sure a service is running
+      systemd:
+        state: started
+        name: docker
+        enabled: yes
+    - name: install docker lib
+      pip:
+        name: docker-py
+    - name: gitlab runner container
+      docker_container:
+        name: gitlab-runner
+        image: gitlab/gitlab-runner:latest
+        state: started
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+        restart_policy: always
+
+    - name: register runner
+      shell: docker exec -it gitlab-runner gitlab-runner register --run-untagged --locked=false --name {{inventory_hostname}} --url http://35.228.22.67/ --registration-token {{gitlab_token}} --executor docker --docker-image ubuntu:16.04 -n --docker-volumes /var/run/docker.sock:/var/run/docker.sock 
+
