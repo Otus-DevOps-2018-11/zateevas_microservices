@@ -28,6 +28,7 @@ test_unit_job:
   services:
     - mongo:latest
   script:
+    - bundle install
     - ruby simpletest.rb
 
 test_integration_job:
