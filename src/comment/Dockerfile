@@ -11,7 +11,7 @@ RUN apk --no-cache add ruby-full ruby-dev build-base  \
     && bundle clean --force
 
 
-ENV COMMENT_DATABASE_HOST comment_db
+ENV COMMENT_DATABASE_HOST post_db
 ENV COMMENT_DATABASE comments
 
 CMD ["puma"]

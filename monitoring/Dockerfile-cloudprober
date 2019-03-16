@@ -1,0 +1,5 @@
+FROM cloudprober/cloudprober:v0.10.0
+
+COPY ./cloudprober/cloudprober.cfg /etc/cloudprober.cfg
+
+ENTRYPOINT ./cloudprober --logtostderr --config_file /etc/cloudprober.cfg
