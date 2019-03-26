@@ -1,0 +1,27 @@
+- hosts: all
+  gather_facts: False
+  become: yes
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- hosts: controllers
+  become: yes
+  tasks:
+  - name: Some tasks for controllers deploy
+    file:
+      path: /etc/kubernetes/config
+      state: directory
+
+- hosts: workers
+  become: yes
+  tasks:
+  - name: Some tasks for workers deploy
+    apt: 
+      name: "{{ packages }}"
+      update_cache: yes
+    vars:
+      packages:
+        - socat
+        - conntrack
+        - ipset

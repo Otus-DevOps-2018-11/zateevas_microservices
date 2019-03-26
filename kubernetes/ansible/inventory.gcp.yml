@@ -1,0 +1,13 @@
+---
+plugin: gcp_compute
+filters:
+groups:
+  workers: "'worker' in name"
+  controllers: "'controller' in name"
+projects:
+  - kubernetes-235619
+scopes:
+  - https://www.googleapis.com/auth/compute
+auth_kind: serviceaccount
+service_account_file: ~/kubernetes-key.json
+
